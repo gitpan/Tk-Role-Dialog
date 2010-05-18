@@ -12,9 +12,9 @@ use warnings;
 
 package Tk::Role::Dialog;
 BEGIN {
-  $Tk::Role::Dialog::VERSION = '1.101380';
+  $Tk::Role::Dialog::VERSION = '1.101381';
 }
-# ABSTRACT: moose role for enhanced dialogs
+# ABSTRACT: moose role for enhanced tk dialogs
 
 use Moose::Role 0.92;
 use MooseX::Has::Sugar;
@@ -169,11 +169,11 @@ no Moose::Role;
 
 =head1 NAME
 
-Tk::Role::Dialog - moose role for enhanced dialogs
+Tk::Role::Dialog - moose role for enhanced tk dialogs
 
 =head1 VERSION
 
-version 1.101380
+version 1.101381
 
 =head1 SYNOPSIS
 

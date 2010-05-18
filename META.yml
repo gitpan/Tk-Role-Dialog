@@ -1,5 +1,5 @@
 ---
-abstract: 'moose role for enhanced dialogs'
+abstract: 'moose role for enhanced tk dialogs'
 author:
   - 'Jerome Quelin'
 build_requires:
@@ -21,7 +21,7 @@ name: Tk-Role-Dialog
 provides:
   Tk::Role::Dialog:
     file: lib/Tk/Role/Dialog.pm
-    version: 1.101380
+    version: 1.101381
 recommends: {}
 requires:
   Moose::Role: 0.92
@@ -34,8 +34,8 @@ requires:
 resources:
   bugtracker: http://rt.cpan.org/Public/Dist/Display.html?Name=Tk-Role-Dialog
   homepage: http://search.cpan.org/dist/Tk-Role-Dialog/
-  repository: origin
-version: 1.101380
+  repository: http://github.com/jquelin/tk-role-dialog
+version: 1.101381
 x_Dist_Zilla:
   plugins:
     -

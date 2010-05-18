@@ -5,7 +5,7 @@ use warnings;
 use Module::Build 0.3601;
 
 my %module_build_args = (
-                       'dist_abstract' => 'moose role for enhanced dialogs',
+                       'dist_abstract' => 'moose role for enhanced tk dialogs',
                        'script_files' => [],
                        'license' => 'perl',
                        'build_requires' => {
@@ -35,7 +35,7 @@ my %module_build_args = (
                        'configure_requires' => {
                                                  'Module::Build' => '0.3601'
                                                },
-                       'dist_version' => '1.101380'
+                       'dist_version' => '1.101381'
                      );
 
 
