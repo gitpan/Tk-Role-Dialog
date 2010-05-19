@@ -21,7 +21,7 @@ name: Tk-Role-Dialog
 provides:
   Tk::Role::Dialog:
     file: lib/Tk/Role/Dialog.pm
-    version: 1.101381
+    version: 1.101390
 recommends: {}
 requires:
   Moose::Role: 0.92
@@ -35,7 +35,7 @@ resources:
   bugtracker: http://rt.cpan.org/Public/Dist/Display.html?Name=Tk-Role-Dialog
   homepage: http://search.cpan.org/dist/Tk-Role-Dialog/
   repository: http://github.com/jquelin/tk-role-dialog
-version: 1.101381
+version: 1.101390
 x_Dist_Zilla:
   plugins:
     -

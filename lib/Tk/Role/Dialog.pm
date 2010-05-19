@@ -12,7 +12,7 @@ use warnings;
 
 package Tk::Role::Dialog;
 BEGIN {
-  $Tk::Role::Dialog::VERSION = '1.101381';
+  $Tk::Role::Dialog::VERSION = '1.101390';
 }
 # ABSTRACT: moose role for enhanced tk dialogs
 
@@ -101,8 +101,6 @@ sub _build_dialog {
     my $top = $self->_toplevel;
     $top->withdraw;
 
-    # window title
-    $top->title( $self->title );
     if ( $self->icon ) {
         my $icon = $top->Photo( -file => $self->icon );
         $top->iconimage( $icon );
@@ -120,7 +118,10 @@ sub _build_dialog {
     }
 
     # build inner gui elements
-    $self->_build_gui() if $self->can( '_build_gui' );
+    if ( $self->can( '_build_gui' ) ) {
+        my $f = $top->Frame->pack(top,xfill2);
+        $self->_build_gui($f);
+    }
 
     # the dialog buttons.
     # note that we specify a bogus width in order for both buttons to be
@@ -149,6 +150,11 @@ sub _build_dialog {
         $top->bind('<Return>', sub { $self->close }) unless $self->ok;
     }
 
+    # window title
+    # this should come at the end, since some widgets (i'm looking at
+    # you tk::pod::text!) change the window title - tsk!
+    $top->title( $self->title );
+
     # center window & make it appear
     $top->Popup( -popover => $self->parent );
     if ( $self->resizable ) {
@@ -173,7 +179,7 @@ Tk::Role::Dialog - moose role for enhanced tk dialogs
 
 =head1 VERSION
 
-version 1.101381
+version 1.101390
 
 =head1 SYNOPSIS
 
@@ -190,7 +196,8 @@ version 1.101381
     sub _build_cancel    { 'close' }        # close the window
 
     sub _build_gui {
-        # build the inner dialog widgets
+        my ($self, $frame) = @_;
+        # build the inner dialog widgets in the $frame
     }
     sub _valid {
         # called when user clicked the 'ok' button
@@ -210,6 +217,10 @@ composed for easy L<Tk> dialogs creation.
 
 It will create a new toplevel with a title, and possibly a header as
 well as some buttons.
+
+One can create the middle part of the dialog by providing a
+C<_build_gui()> method, that will receive a L<Tk::Frame> where widgets
+are supposed to be placed.
 
 The attributes (see below) can be either defined as defaults using the
 C<_build_attr()> methods, or passed arguments to the constructor call.
