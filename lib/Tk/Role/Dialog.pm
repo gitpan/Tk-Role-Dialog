@@ -12,10 +12,11 @@ use warnings;
 
 package Tk::Role::Dialog;
 BEGIN {
-  $Tk::Role::Dialog::VERSION = '1.101391';
+  $Tk::Role::Dialog::VERSION = '1.101392';
 }
 # ABSTRACT: moose role for enhanced tk dialogs
 
+use File::Basename qw{ fileparse };
 use Moose::Role 0.92;
 use MooseX::Has::Sugar;
 use Tk;
@@ -108,6 +109,10 @@ sub _build_dialog {
     if ( $self->icon ) {
         my $icon = $top->Photo( -file => $self->icon );
         $top->iconimage( $icon );
+        # transparent images have a xbm mask
+        my ($file, $path, $ext) = fileparse( $self->icon, qr/\.png/i );
+        my $mask = $path . "$file-mask.xbm";
+        $top->iconmask( '@' . $mask ) if -f $mask;
     }
 
     # dialog name
@@ -195,7 +200,7 @@ Tk::Role::Dialog - moose role for enhanced tk dialogs
 
 =head1 VERSION
 
-version 1.101391
+version 1.101392
 
 =head1 SYNOPSIS
 

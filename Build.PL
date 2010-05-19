@@ -29,13 +29,14 @@ my %module_build_args = (
                                        'Tk::PNG' => '0',
                                        'Tk::JPEG' => '0',
                                        'Tk::Sugar' => '0',
+                                       'File::Basename' => '0',
                                        'Tk' => '0'
                                      },
                        'recommends' => {},
                        'configure_requires' => {
                                                  'Module::Build' => '0.3601'
                                                },
-                       'dist_version' => '1.101391'
+                       'dist_version' => '1.101392'
                      );
 
 
