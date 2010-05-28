@@ -12,13 +12,14 @@ use warnings;
 
 package Tk::Role::Dialog;
 BEGIN {
-  $Tk::Role::Dialog::VERSION = '1.101392';
+  $Tk::Role::Dialog::VERSION = '1.101480';
 }
 # ABSTRACT: moose role for enhanced tk dialogs
 
-use File::Basename qw{ fileparse };
+use File::Basename             qw{ fileparse };
 use Moose::Role 0.92;
 use MooseX::Has::Sugar;
+use MooseX::Types::Path::Class qw{ File };
 use Tk;
 use Tk::JPEG;
 use Tk::PNG;
@@ -29,7 +30,8 @@ use Tk::Sugar;
 
 
 has parent    => ( ro, required, weak_ref, isa=>'Tk::Widget' );
-has icon      => ( ro, lazy_build, isa=>'Str' );
+has hidden    => ( ro, lazy_build, isa=>'Bool' );
+has icon      => ( ro, lazy_build, isa=>File, coerce );
 has title     => ( ro, lazy_build, isa=>'Str' );
 has header    => ( ro, lazy_build, isa=>'Str' );
 has text      => ( ro, lazy_build, isa=>'Str' );
@@ -37,6 +39,7 @@ has image     => ( ro, lazy_build, isa=>'Str' );
 has resizable => ( ro, lazy_build, isa=>'Bool' );
 has ok        => ( ro, lazy_build, isa=>'Str' );
 has cancel    => ( ro, lazy_build, isa=>'Str' );
+has hide      => ( ro, lazy_build, isa=>'Str' );
 
 has _toplevel => ( rw, lazy_build, isa=>'Tk::Toplevel' );
 
@@ -56,6 +59,7 @@ has _widgets => (
 # -- initialization / finalization
 
 # those are defaults for the role public attributes
+sub _build_hidden    { 0 }
 sub _build_title     { 'tk dialog' }
 sub _build_icon      { '' }
 sub _build_header    { '' }
@@ -64,6 +68,7 @@ sub _build_text      { '' }
 sub _build_resizable { 0 }
 sub _build_ok        { '' }
 sub _build_cancel    { '' }
+sub _build_hide      { '' }
 
 sub _build__toplevel {
     my $self = shift;
@@ -110,7 +115,7 @@ sub _build_dialog {
         my $icon = $top->Photo( -file => $self->icon );
         $top->iconimage( $icon );
         # transparent images have a xbm mask
-        my ($file, $path, $ext) = fileparse( $self->icon, qr/\.png/i );
+        my ($file, $path, undef) = fileparse( $self->icon, qr/\.png/i );
         my $mask = $path . "$file-mask.xbm";
         $top->iconmask( '@' . $mask ) if -f $mask;
     }
@@ -160,6 +165,16 @@ sub _build_dialog {
         $top->bind('<Return>', sub { $self->_valid });
         $top->bind('<Escape>', sub { $self->_valid }) unless $self->cancel;
     }
+    if ( $self->hide ) {
+        my $but = $fbuttons->Button(
+            -text    => $self->hide,
+            -width   => 10,
+            -command => sub { $top->withdraw },
+        )->pack(left, xfill2);
+        $self->_set_w('hide', $but);
+        $top->bind('<Return>', sub { $top->withdraw }) unless $self->ok;
+        $top->bind('<Escape>', sub { $top->withdraw }) unless $self->cancel;
+    }
     if ( $self->cancel ) {
         my $but = $fbuttons->Button(
             -text    => $self->cancel,
@@ -177,7 +192,7 @@ sub _build_dialog {
     $top->title( $self->title );
 
     # center window & make it appear
-    $top->Popup( -popover => $self->parent );
+    $top->Popup( -popover => $self->parent ) unless $self->hidden;
     if ( $self->resizable ) {
         $top->minsize($top->width, $top->height);
     } else {
@@ -200,7 +215,7 @@ Tk::Role::Dialog - moose role for enhanced tk dialogs
 
 =head1 VERSION
 
-version 1.101392
+version 1.101480
 
 =head1 SYNOPSIS
 
@@ -254,6 +269,11 @@ other attributes if you want your dialog to be somehow usable! :-)
 
 The parent window of the dialog, required.
 
+=head2 hidden
+
+Whether the dialog should popup or stay hidden after creation. Default
+to false, which means the dialog is shown.
+
 =head2 icon
 
 The path to an image to be used as window icon. Default to empty string
@@ -296,6 +316,12 @@ C<< $self->_valid() >>.
 A string to display as cancellation button label. Default to empty
 string, meaning no cancellation button. The cancel action is to just
 close the dialog.
+
+=head2 hide
+
+A string to display as hiding button label. Default to empty
+string, meaning no hiding button. The hiding action is to just
+hide the dialog (think C<withdraw>).
 
 =head1 METHODS
 

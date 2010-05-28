@@ -27,6 +27,7 @@ my %module_build_args = (
                                        'Moose::Role' => '0.92',
                                        'perl' => '5.010',
                                        'Tk::PNG' => '0',
+                                       'MooseX::Types::Path::Class' => '0',
                                        'Tk::JPEG' => '0',
                                        'Tk::Sugar' => '0',
                                        'File::Basename' => '0',
@@ -36,7 +37,7 @@ my %module_build_args = (
                        'configure_requires' => {
                                                  'Module::Build' => '0.3601'
                                                },
-                       'dist_version' => '1.101392'
+                       'dist_version' => '1.101480'
                      );
 
 
