@@ -1,18 +1,18 @@
-# 
+#
 # This file is part of Tk-Role-Dialog
-# 
+#
 # This software is copyright (c) 2010 by Jerome Quelin.
-# 
+#
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
-# 
+#
 use 5.010;
 use strict;
 use warnings;
 
 package Tk::Role::Dialog;
-BEGIN {
-  $Tk::Role::Dialog::VERSION = '1.101480';
+{
+  $Tk::Role::Dialog::VERSION = '1.112380';
 }
 # ABSTRACT: moose role for enhanced tk dialogs
 
@@ -24,6 +24,8 @@ use Tk;
 use Tk::JPEG;
 use Tk::PNG;
 use Tk::Sugar;
+
+with 'Tk::Role::HasWidgets' => { -version => 1.112380 }; # _clear_w
 
 
 # -- accessors
@@ -44,17 +46,6 @@ has hide      => ( ro, lazy_build, isa=>'Str' );
 has _toplevel => ( rw, lazy_build, isa=>'Tk::Toplevel' );
 
 
-# a hash to store the widgets for easier reference.
-has _widgets => (
-    ro,
-    traits  => ['Hash'],
-    isa     => 'HashRef',
-    default => sub { {} },
-    handles => {
-        _set_w => 'set',
-        _w     => 'get',
-    },
-);
 
 # -- initialization / finalization
 
@@ -215,7 +206,7 @@ Tk::Role::Dialog - moose role for enhanced tk dialogs
 
 =head1 VERSION
 
-version 1.101480
+version 1.112380
 
 =head1 SYNOPSIS
 
@@ -364,7 +355,7 @@ L<http://cpanratings.perl.org/d/Tk-Role-Dialog>
 
 =head1 AUTHOR
 
-  Jerome Quelin
+Jerome Quelin
 
 =head1 COPYRIGHT AND LICENSE
 
